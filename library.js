@@ -64,7 +64,7 @@ const getBooks = function () {
           cart.appendChild(cartItem);
           cartItem.innerText = `${book.title} ${book.price}`;
           arrCart.push(book.title);
-          localStorage.setItem("arr-Cart", JSON.stringify(arrCart));
+          localStorage.setItem("storedCart", JSON.stringify(arrCart));
 
           const delBtn = document.createElement("button");
           delBtn.classList.add("btn", "btn-danger");
@@ -80,7 +80,7 @@ const getBooks = function () {
 };
 
 window.addEventListener("DOMContentLoaded", () => {
-  const savedItems = localStorage.getItem("arr-Cart");
+  const savedItems = localStorage.getItem("storedCart");
   if (savedItems) {
     const parsedItems = JSON.parse(savedItems);
     console.log(parsedItems);
@@ -95,6 +95,7 @@ window.addEventListener("DOMContentLoaded", () => {
       cartItem.appendChild(delBtn);
       delBtn.innerText = "Remove";
       cartItem.onclick = () => {
+        localStorage.removeItem(cartItem);
         cart.removeChild(cartItem);
       };
     });
