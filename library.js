@@ -1,6 +1,7 @@
 const cardCont = document.getElementById("cardCont");
 const row = document.getElementById("row");
 let arrCart = [];
+
 const cart = document.getElementById("cart");
 
 const getBooks = function () {
@@ -36,7 +37,9 @@ const getBooks = function () {
         const cardTitle = document.createElement("h5");
         cardTitle.classList.add("card-title");
         cardBody.appendChild(cardTitle);
-        cardTitle.innerText = book.title;
+        cardTitle.innerText = `${book.title}  
+        -
+        €${book.price}`;
         const price = document.createElement("p");
         price.classList.add("card-text");
         cardBody.appendChild(cardTitle);
@@ -62,17 +65,19 @@ const getBooks = function () {
           const cartItem = document.createElement("li");
           cartItem.classList.add("dropdown-item");
           cart.appendChild(cartItem);
-          cartItem.innerText = `${book.title} ${book.price}`;
-          arrCart.push(book.title, book.price);
+          cartItem.innerText = `${book.title}  
+          € ${book.price}`;
+          const { title, price } = book;
+          arrCart.push({ title, price });
+          console.log(arrCart);
           localStorage.setItem("storedCart", JSON.stringify(arrCart));
 
           const delBtn = document.createElement("button");
           delBtn.classList.add("btn", "btn-danger");
           cartItem.appendChild(delBtn);
           delBtn.innerText = "Remove";
-          cartItem.onclick = () => {
+          delBtn.onclick = () => {
             cart.removeChild(cartItem);
-            localStorage.removeItem(cartItem.innerText);
           };
         };
       });
@@ -87,16 +92,27 @@ window.addEventListener("DOMContentLoaded", () => {
     console.log(parsedItems);
     arrCart = parsedItems;
     arrCart.forEach((item) => {
+      console.log(arrCart);
       const cartItem = document.createElement("li");
       cartItem.classList.add("dropdown-item");
       cart.appendChild(cartItem);
-      cartItem.innerText = `${item}`;
+      cartItem.innerText = `${item.title} - €${item.price}`;
       const delBtn = document.createElement("button");
       delBtn.classList.add("btn", "btn-danger");
       cartItem.appendChild(delBtn);
+
       delBtn.innerText = "Remove";
-      cartItem.onclick = () => {
+      delBtn.onclick = () => {
         cart.removeChild(cartItem);
+
+        console.log(cartItem.innerText);
+        const itemIndex = arrCart.findIndex((elem) => cartItem.innerText === elem.title);
+        console.log(itemIndex);
+        console.log(arrCart);
+        if (itemIndex !== -1) {
+          arrCart.splice(itemIndex, 1);
+          //   localStorage.setItem("storedCart", JSON.stringify(arrCart));
+        }
       };
     });
   }
