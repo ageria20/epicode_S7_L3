@@ -1,6 +1,6 @@
 const cardCont = document.getElementById("cardCont");
 const row = document.getElementById("row");
-const arrCart = [];
+let arrCart = [];
 const cart = document.getElementById("cart");
 
 const getBooks = function () {
@@ -62,13 +62,16 @@ const getBooks = function () {
           const cartItem = document.createElement("li");
           cartItem.classList.add("dropdown-item");
           cart.appendChild(cartItem);
-          cartItem.innerText = book.title;
+          cartItem.innerText = `${book.title} ${book.price}`;
+          arrCart.push(book.title);
+          localStorage.setItem("arr-Cart", JSON.stringify(arrCart));
+
           const delBtn = document.createElement("button");
           delBtn.classList.add("btn", "btn-danger");
           cartItem.appendChild(delBtn);
           delBtn.innerText = "Remove";
           cartItem.onclick = () => {
-            cartItem.classList.add("d-none");
+            cart.removeChild(cartItem);
           };
         };
       });
@@ -77,5 +80,24 @@ const getBooks = function () {
 };
 
 window.addEventListener("DOMContentLoaded", () => {
+  const savedItems = localStorage.getItem("arr-Cart");
+  if (savedItems) {
+    const parsedItems = JSON.parse(savedItems);
+    console.log(parsedItems);
+    arrCart = parsedItems;
+    arrCart.forEach((item) => {
+      const cartItem = document.createElement("li");
+      cartItem.classList.add("dropdown-item");
+      cart.appendChild(cartItem);
+      cartItem.innerText = `${item}`;
+      const delBtn = document.createElement("button");
+      delBtn.classList.add("btn", "btn-danger");
+      cartItem.appendChild(delBtn);
+      delBtn.innerText = "Remove";
+      cartItem.onclick = () => {
+        cart.removeChild(cartItem);
+      };
+    });
+  }
   getBooks();
 });
