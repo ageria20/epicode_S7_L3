@@ -9,7 +9,7 @@ const getBooks = function () {
       if (obj.ok) {
         return obj.json();
       } else {
-        throw new Error(obj.status);
+        throw new Error(`Status error: ${obj.status}`);
       }
     })
 
@@ -55,7 +55,7 @@ const getBooks = function () {
         addCart.innerText = "Add to cart";
         discard.innerText = "Discard";
         discard.onclick = () => {
-          card.classList.add("d-none");
+          row.removeChild(card);
         };
 
         addCart.onclick = () => {
@@ -63,7 +63,7 @@ const getBooks = function () {
           cartItem.classList.add("dropdown-item");
           cart.appendChild(cartItem);
           cartItem.innerText = `${book.title} ${book.price}`;
-          arrCart.push(book.title);
+          arrCart.push(book.title, book.price);
           localStorage.setItem("storedCart", JSON.stringify(arrCart));
 
           const delBtn = document.createElement("button");
@@ -72,11 +72,12 @@ const getBooks = function () {
           delBtn.innerText = "Remove";
           cartItem.onclick = () => {
             cart.removeChild(cartItem);
+            localStorage.removeItem(cartItem.innerText);
           };
         };
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log("An error occurred"));
 };
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -95,7 +96,6 @@ window.addEventListener("DOMContentLoaded", () => {
       cartItem.appendChild(delBtn);
       delBtn.innerText = "Remove";
       cartItem.onclick = () => {
-        localStorage.removeItem(cartItem);
         cart.removeChild(cartItem);
       };
     });
